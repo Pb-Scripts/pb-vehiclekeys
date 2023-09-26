@@ -106,3 +106,4 @@ RegisterNetEvent(Config.LoadEvent, function() GetAllCSNKeys() end)
 -- Lockpick --
 --------------
 
+--Soon
