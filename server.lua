@@ -1,6 +1,6 @@
 local QBCore = exports['qbx-core']:GetCoreObject()
 local players_keys = {}
-lib.locale()
+pb.locale()
 
 RegisterNetEvent('baseevents:enteredVehicle')
 AddEventHandler("baseevents:enteredVehicle", function(targetVehicle, vehicleSeat, vehicleDisplayName)
@@ -16,7 +16,7 @@ AddEventHandler('entityCreated', function(entity)
     SetVehicleDoorsLocked(entity, 2)
 end)
 
-lib.callback.register('pb-vehiclekeys:AddPlayerKeyServer', function(source, plate, id)
+pb.callback.register('pb-vehiclekeys:AddPlayerKeyServer', function(source, plate, id)
     local citizenid = QBCore.Functions.GetPlayer(source).PlayerData.citizenid
     if not players_keys[citizenid] then players_keys[citizenid] = {} end
     players_keys[citizenid][plate] = true
@@ -24,24 +24,8 @@ lib.callback.register('pb-vehiclekeys:AddPlayerKeyServer', function(source, plat
     return
 end)
 
-lib.callback.register('pb-vehiclekeys:GetCsnKeys', function(source)
+pb.callback.register('pb-vehiclekeys:GetCsnKeys', function(source)
     local citizenid = QBCore.Functions.GetPlayer(source).PlayerData.citizenid
 
     if not players_keys[citizenid] then return {} else return players_keys[citizenid] end
-end)
-
-lib.addCommand('getcarkey', {
-    help = locale('getkeys_help'),
-    params = {
-        {
-            name = "target",
-            type = 'playerId',
-            help = 'Player Server Id',
-            optional = true,
-        }
-    },
-    restricted = 'group.admin'
-}, function(source, args, raw)
-    local plyId = args.target or source
-    lib.callback.await("pb-vehiclekeys:adminGetKeys", plyId)
 end)
