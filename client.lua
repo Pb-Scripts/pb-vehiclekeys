@@ -106,4 +106,20 @@ RegisterNetEvent(Config.LoadEvent, function() GetAllCSNKeys() end)
 -- Lockpick --
 --------------
 
---Soon
+local function GetVehicleKeysNearby()
+    local ped = PlayerPedId()
+    local veh, coords = pb.getClosestVehicle(GetEntityCoords(ped), 5.0, true)
+    local plate = GetVehicleNumberPlateText(veh)
+    GiveKeys(plate)
+end
+exports("GetVehicleKeysNearby", GetVehicleKeysNearby)
+
+local function Lockpicking()
+    pb.playAnim('anim@amb@clubhouse@tutorial@bkr_tut_ig3@', 'machinic_loop_mechandplayer', 1, 5000)
+    GetVehicleKeysNearby()
+end
+exports("Lockpicking", Lockpicking)
+
+RegisterCommand("lockpick", function()
+    Lockpicking()
+end)
