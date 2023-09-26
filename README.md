@@ -23,5 +23,3 @@ GetAllCSNKeys -> Give back all keys that player character had in past
 - [baseevents](https://github.com/xaviablaza/fivem-playground/tree/master/cfx-server-data/resources/%5Bsystem%5D/baseevents)
 
 * [pb-utils](https://github.com/Pbtm999/pb-utils)
-
-+ [oxmysql](https://github.com/overextended/oxmysql)
