@@ -1,0 +1,5 @@
+{
+    "lock_unlock_command": "Trancar/Destrancar Veículo",
+    "engine_command": "Ligar/Desligar Motor",
+    "getkeys_help": "Receber chaves de carro"
+}

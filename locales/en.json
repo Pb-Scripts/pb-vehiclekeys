@@ -1,0 +1,5 @@
+{
+    "lock_unlock_command": "Unlock/Lock Vehicle",
+    "engine_command": "Turn On/Off Engine",
+    "getkeys_help": "Get car keys"
+}
