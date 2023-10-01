@@ -16,6 +16,10 @@ HaveKeys(plate) -> Check if client have the key for vehicle with the plate
 RemoveAllKeys -> Clean all client keys
 
 GetAllCSNKeys -> Give back all keys that player character had in past
+
+GetVehicleKeysNearby -> Get keys from nearby vehicle
+
+Lockpicking -> Do animation of lockpick and GetVehicleKeysNearby
 ```
 
 ### Requirements

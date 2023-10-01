@@ -127,7 +127,3 @@ local function Lockpicking()
     end
 end
 exports("Lockpicking", Lockpicking)
-
-RegisterCommand("lockpick", function()
-    Lockpicking()
-end)
