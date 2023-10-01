@@ -1,5 +1,4 @@
 local players_keys = {}
-pb.locale()
 
 RegisterNetEvent('baseevents:enteredVehicle')
 AddEventHandler("baseevents:enteredVehicle", function(targetVehicle, vehicleSeat, vehicleDisplayName)

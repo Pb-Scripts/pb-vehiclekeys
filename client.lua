@@ -1,9 +1,10 @@
 local MyVehicleKeys = {}
-pb.locale()
 
 ------------------
 -- Vehicle Lock --
 ------------------
+
+pb.locales()
 
 RegisterNetEvent("pb-vehiclekeys:tryingToEnterVehicle")
 AddEventHandler("pb-vehiclekeys:tryingToEnterVehicle", function(targetVehicle, vehicleSeat, vehicleDisplayName)
@@ -108,15 +109,22 @@ RegisterNetEvent(Config.LoadEvent, function() GetAllCSNKeys() end)
 
 local function GetVehicleKeysNearby()
     local ped = PlayerPedId()
-    local veh, coords = pb.getClosestVehicle(GetEntityCoords(ped), 5.0, true)
+    local veh, _ = pb.getClosestVehicle(GetEntityCoords(ped), 5.0, true)
     local plate = GetVehicleNumberPlateText(veh)
     GiveKeys(plate)
+    return veh
 end
 exports("GetVehicleKeysNearby", GetVehicleKeysNearby)
 
 local function Lockpicking()
-    pb.playAnim('anim@amb@clubhouse@tutorial@bkr_tut_ig3@', 'machinic_loop_mechandplayer', 1, 5000)
-    GetVehicleKeysNearby()
+    local ped = PlayerPedId()
+    local veh = GetVehicleKeysNearby()
+    if IsPedInAnyVehicle(ped, true) and GetPedInVehicleSeat(GetVehiclePedIsIn(ped), -1) == ped then 
+        pb.playAnim('veh@std@ds@base', 'hotwire', 1, 5000)
+    else
+        pb.playAnim('anim@amb@clubhouse@tutorial@bkr_tut_ig3@', 'machinic_loop_mechandplayer', 1, 5000)
+        SetVehicleDoorsLocked(veh, 0)
+    end
 end
 exports("Lockpicking", Lockpicking)
 

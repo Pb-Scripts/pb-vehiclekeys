@@ -4,6 +4,9 @@ author "Pb"
 
 
 lua54 'yes'
+files {
+    'locales/*.json'
+}
 
 client_script 'client.lua'
 
