@@ -1,4 +1,4 @@
-# pb-vehiclekeys
+# pb-vehiclekeys | for QBCore or QBXCore | with ox_lib | can be converted to ESX easily
 
 ## Config
 ```
@@ -26,4 +26,4 @@ Lockpicking -> Do animation of lockpick and GetVehicleKeysNearby
 
 - [baseevents](https://github.com/xaviablaza/fivem-playground/tree/master/cfx-server-data/resources/%5Bsystem%5D/baseevents)
 
-* [pb-utils](https://github.com/Pbtm999/pb-utils)
+* [ox_lib](https://github.com/overextended/ox_lib)
