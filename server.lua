@@ -14,16 +14,16 @@ AddEventHandler('entityCreated', function(entity)
     SetVehicleDoorsLocked(entity, 2)
 end)
 
-pb.callback.register('pb-vehiclekeys:AddPlayerKeyServer', function(source, plate, id)
-    local citizenid = pb.GetPlayerCid(source)
+lib.callback.register('pb-vehiclekeys:AddPlayerKeyServer', function(source, plate, id)
+    local citizenid = QBCore.Functions.GetPlayer(source).PlayerData.citizenid
     if not players_keys[citizenid] then players_keys[citizenid] = {} end
     players_keys[citizenid][plate] = true
     if id then lib.callback.await('pb-vehiclekeys:GivePlayerKey', id, plate) end 
     return
 end)
 
-pb.callback.register('pb-vehiclekeys:GetCsnKeys', function(source)
-    local citizenid = pb.GetPlayerCid(source)
+lib.callback.register('pb-vehiclekeys:GetCsnKeys', function(source)
+    local citizenid = QBCore.Functions.GetPlayer(source).PlayerData.citizenid
 
     if not players_keys[citizenid] then return {} else return players_keys[citizenid] end
 end)

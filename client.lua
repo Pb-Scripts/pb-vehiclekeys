@@ -4,7 +4,21 @@ local MyVehicleKeys = {}
 -- Vehicle Lock --
 ------------------
 
-pb.locales()
+lib.locale()
+
+local function playAnim(dict, anim, flag, time, stopOnly)
+    local ped = PlayerPedId()
+    while (not HasAnimDictLoaded(dict)) do RequestAnimDict(dict) Wait(0) end
+    TaskPlayAnim(ped, dict, anim, 8.0, -8, -1, flag, 0, 0, 0, 0)
+    if time then Wait(time) 
+        if stopOnly then
+            StopAnimTask(ped, dict, anim, 500) 
+        else
+            ClearPedTasks(ped)
+        end
+    end
+    return
+end
 
 RegisterNetEvent("pb-vehiclekeys:tryingToEnterVehicle")
 AddEventHandler("pb-vehiclekeys:tryingToEnterVehicle", function(targetVehicle, vehicleSeat, vehicleDisplayName)
@@ -18,9 +32,9 @@ AddEventHandler("pb-vehiclekeys:tryingToEnterVehicle", function(targetVehicle, v
 end)
 
 RegisterCommand("lockveh", function()
-    local veh, _ = pb.getClosestVehicle(GetEntityCoords(PlayerPedId()), 5.0, true)
+    local veh, _ = lib.getClosestVehicle(GetEntityCoords(PlayerPedId()), 5.0, true)
     if veh ~= 0 and MyVehicleKeys[GetVehicleNumberPlateText(veh)] then
-        pb.playAnim('anim@mp_player_intmenu@key_fob@', 'fob_click', 48)
+        playAnim('anim@mp_player_intmenu@key_fob@', 'fob_click', 48)
         if GetVehicleDoorLockStatus(veh) ~= 0 then
             SetVehicleDoorsLocked(veh, 0)
         else
@@ -59,11 +73,11 @@ RegisterKeyMapping("engine", locale("engine_command"), 'keyboard', "G")
 --------------------
 
 local function GiveKeys(plate, id)
-    pb.callback.await('pb-vehiclekeys:AddPlayerKeyServer', false, plate, id)
+    lib.callback.await('pb-vehiclekeys:AddPlayerKeyServer', false, plate, id)
     if not id then MyVehicleKeys[plate] = true end
 end
 
-pb.callback.register('pb-vehiclekeys:GivePlayerKey', function(plate) MyVehicleKeys[plate] = true return end)
+lib.callback.register('pb-vehiclekeys:GivePlayerKey', function(plate) MyVehicleKeys[plate] = true return end)
 
 local function HaveKeys(plate)
     return MyVehicleKeys[plate]
@@ -71,15 +85,15 @@ end
 
 RegisterCommand("darchaves", function()
     local coords = GetEntityCoords(PlayerPedId())
-    local veh, _ = pb.getClosestVehicle(coords, 5.0, true)
-    local ped_id, _ = pb.getClosestPlayer(coords, 5.0, false)
+    local veh, _ = lib.getClosestVehicle(coords, 5.0, true)
+    local ped_id, _ = lib.getClosestPlayer(coords, 5.0, false)
     if veh ~= 0 and ped_id then
         GiveKeys(GetVehicleNumberPlateText(veh), GetPlayerServerId(ped_id))
     end
 end)
 
-pb.callback.register('pb-vehiclekeys:adminGetKeys', function() 
-    local veh, _ = pb.getClosestVehicle(GetEntityCoords(PlayerPedId()), 5.0, true)
+lib.callback.register('pb-vehiclekeys:adminGetKeys', function() 
+    local veh, _ = lib.getClosestVehicle(GetEntityCoords(PlayerPedId()), 5.0, true)
     if veh ~= 0 then
         GiveKeys(GetVehicleNumberPlateText(veh))
     end 
@@ -94,7 +108,7 @@ exports("HaveKeys", HaveKeys)
 -----------------------------
 
 local function RemoveAllKeys() MyVehicleKeys = {} return end
-local function GetAllCSNKeys() MyVehicleKeys = pb.callback.await('pb-vehiclekeys:GetCsnKeys') return end
+local function GetAllCSNKeys() MyVehicleKeys = lib.callback.await('pb-vehiclekeys:GetCsnKeys') return end
 
 exports("RemoveAllKeys", RemoveAllKeys)
 exports("GetAllCSNKeys", GetAllCSNKeys)
@@ -109,7 +123,7 @@ RegisterNetEvent(Config.LoadEvent, function() GetAllCSNKeys() end)
 
 local function GetVehicleKeysNearby()
     local ped = PlayerPedId()
-    local veh, _ = pb.getClosestVehicle(GetEntityCoords(ped), 5.0, true)
+    local veh, _ = lib.getClosestVehicle(GetEntityCoords(ped), 5.0, true)
     local plate = GetVehicleNumberPlateText(veh)
     GiveKeys(plate)
     return veh
@@ -120,9 +134,9 @@ local function Lockpicking()
     local ped = PlayerPedId()
     local veh = GetVehicleKeysNearby()
     if IsPedInAnyVehicle(ped, true) and GetPedInVehicleSeat(GetVehiclePedIsIn(ped), -1) == ped then 
-        pb.playAnim('veh@std@ds@base', 'hotwire', 1, 5000)
+        playAnim('veh@std@ds@base', 'hotwire', 1, 5000)
     else
-        pb.playAnim('anim@amb@clubhouse@tutorial@bkr_tut_ig3@', 'machinic_loop_mechandplayer', 1, 5000)
+        playAnim('anim@amb@clubhouse@tutorial@bkr_tut_ig3@', 'machinic_loop_mechandplayer', 1, 5000)
         SetVehicleDoorsLocked(veh, 0)
     end
 end
