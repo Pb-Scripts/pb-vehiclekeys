@@ -19,14 +19,6 @@ AddEventHandler("pb-vehiclekeys:EnteredVehicle", function(targetVehicle, vehicle
     end
 end)
 
-RegisterNetEvent("pb-vehiclekeys:tryingToEnterVehicle")
-AddEventHandler("pb-vehiclekeys:tryingToEnterVehicle", function(targetVehicle, vehicleSeat, vehicleDisplayName)
-    local ped = PlayerPedId()
-    local plate = GetVehicleNumberPlateText(targetVehicle)
-
-    print(plate)
-end)
-
 RegisterCommand("lockveh", function()
     local veh, _ = lib.getClosestVehicle(GetEntityCoords(PlayerPedId()), 5.0, true)
     if veh ~= 0 and MyVehicleKeys[GetVehicleNumberPlateText(veh)] then
