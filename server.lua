@@ -2,7 +2,7 @@ local players_keys = {}
 
 RegisterNetEvent('baseevents:enteredVehicle')
 AddEventHandler("baseevents:enteredVehicle", function(targetVehicle, vehicleSeat, vehicleDisplayName)
-    TriggerClientEvent("pb-vehiclekeys:tryingToEnterVehicle", source, targetVehicle, vehicleSeat)
+    TriggerClientEvent("pb-vehiclekeys:EnteredVehicle", source, targetVehicle, vehicleSeat)
 end)
 
 RegisterNetEvent('entityCreated')
@@ -15,7 +15,7 @@ AddEventHandler('entityCreated', function(entity)
 end)
 
 lib.callback.register('pb-vehiclekeys:AddPlayerKeyServer', function(source, plate, id)
-    local citizenid = QBCore.Functions.GetPlayer(source).PlayerData.citizenid
+    local citizenid = lib.getPlayerCid(source)
     if not players_keys[citizenid] then players_keys[citizenid] = {} end
     players_keys[citizenid][plate] = true
     if id then lib.callback.await('pb-vehiclekeys:GivePlayerKey', id, plate) end 
@@ -23,7 +23,7 @@ lib.callback.register('pb-vehiclekeys:AddPlayerKeyServer', function(source, plat
 end)
 
 lib.callback.register('pb-vehiclekeys:GetCsnKeys', function(source)
-    local citizenid = QBCore.Functions.GetPlayer(source).PlayerData.citizenid
+    local citizenid = lib.getPlayerCid(source)
 
     if not players_keys[citizenid] then return {} else return players_keys[citizenid] end
 end)

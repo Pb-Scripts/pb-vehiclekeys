@@ -6,24 +6,12 @@ local MyVehicleKeys = {}
 
 lib.locale()
 
-local function playAnim(dict, anim, flag, time, stopOnly)
-    local ped = PlayerPedId()
-    while (not HasAnimDictLoaded(dict)) do RequestAnimDict(dict) Wait(0) end
-    TaskPlayAnim(ped, dict, anim, 8.0, -8, -1, flag, 0, 0, 0, 0)
-    if time then Wait(time) 
-        if stopOnly then
-            StopAnimTask(ped, dict, anim, 500) 
-        else
-            ClearPedTasks(ped)
-        end
-    end
-    return
-end
-
-RegisterNetEvent("pb-vehiclekeys:tryingToEnterVehicle")
-AddEventHandler("pb-vehiclekeys:tryingToEnterVehicle", function(targetVehicle, vehicleSeat, vehicleDisplayName)
+RegisterNetEvent("pb-vehiclekeys:EnteredVehicle")
+AddEventHandler("pb-vehiclekeys:EnteredVehicle", function(targetVehicle, vehicleSeat, vehicleDisplayName)
     local ped = PlayerPedId()
     local plate = GetVehicleNumberPlateText(targetVehicle)
+
+    print(plate)
 
     while not MyVehicleKeys[plate] and GetPedInVehicleSeat(targetVehicle, -1) == PlayerPedId() do
         SetVehicleEngineOn(targetVehicle, false, false, true)
@@ -31,10 +19,18 @@ AddEventHandler("pb-vehiclekeys:tryingToEnterVehicle", function(targetVehicle, v
     end
 end)
 
+RegisterNetEvent("pb-vehiclekeys:tryingToEnterVehicle")
+AddEventHandler("pb-vehiclekeys:tryingToEnterVehicle", function(targetVehicle, vehicleSeat, vehicleDisplayName)
+    local ped = PlayerPedId()
+    local plate = GetVehicleNumberPlateText(targetVehicle)
+
+    print(plate)
+end)
+
 RegisterCommand("lockveh", function()
     local veh, _ = lib.getClosestVehicle(GetEntityCoords(PlayerPedId()), 5.0, true)
     if veh ~= 0 and MyVehicleKeys[GetVehicleNumberPlateText(veh)] then
-        playAnim('anim@mp_player_intmenu@key_fob@', 'fob_click', 48)
+        lib.playAnim('anim@mp_player_intmenu@key_fob@', 'fob_click', 48)
         if GetVehicleDoorLockStatus(veh) ~= 0 then
             SetVehicleDoorsLocked(veh, 0)
         else
@@ -83,7 +79,7 @@ local function HaveKeys(plate)
     return MyVehicleKeys[plate]
 end
 
-RegisterCommand("darchaves", function()
+RegisterCommand(Config.GiveKeysCommand, function()
     local coords = GetEntityCoords(PlayerPedId())
     local veh, _ = lib.getClosestVehicle(coords, 5.0, true)
     local ped_id, _ = lib.getClosestPlayer(coords, 5.0, false)
@@ -134,10 +130,14 @@ local function Lockpicking()
     local ped = PlayerPedId()
     local veh = GetVehicleKeysNearby()
     if IsPedInAnyVehicle(ped, true) and GetPedInVehicleSeat(GetVehiclePedIsIn(ped), -1) == ped then 
-        playAnim('veh@std@ds@base', 'hotwire', 1, 5000)
+        lib.playAnim('veh@std@ds@base', 'hotwire', 1, 5000)
     else
-        playAnim('anim@amb@clubhouse@tutorial@bkr_tut_ig3@', 'machinic_loop_mechandplayer', 1, 5000)
+        lib.playAnim('anim@amb@clubhouse@tutorial@bkr_tut_ig3@', 'machinic_loop_mechandplayer', 1, 5000)
         SetVehicleDoorsLocked(veh, 0)
     end
 end
 exports("Lockpicking", Lockpicking)
+
+RegisterCommand("lock", function()
+    Lockpicking()
+end)
