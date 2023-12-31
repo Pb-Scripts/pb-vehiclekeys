@@ -19,3 +19,6 @@ Config.Shared = {
         'polas350',
     }
 }
+
+Config.GiveKeysCommand = "darchaves"
+

@@ -18,7 +18,3 @@ shared_scripts {
     '@ox_lib/init.lua',
     'config.lua'
 }
-
-dependencies {
-    'pb-utils'
-}
