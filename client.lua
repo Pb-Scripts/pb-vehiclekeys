@@ -15,6 +15,7 @@ AddEventHandler("pb-vehiclekeys:EnteredVehicle", function(targetVehicle, vehicle
     if not MyVehicleKeys[plate] then isShared(targetVehicle) end
 
     while not MyVehicleKeys[plate] and GetPedInVehicleSeat(targetVehicle, -1) == PlayerPedId() do
+        SetVehicleNeedsToBeHotwired(targetVehicle, false)
         SetVehicleEngineOn(targetVehicle, false, false, true)
         Wait(0)
     end

@@ -12,7 +12,6 @@ AddEventHandler('entityCreated', function(entity)
     if entityType ~= 2 then return end
 
     SetVehicleDoorsLocked(entity, 2)
-    SetVehicleNeedsToBeHotwired(entity, false)
 end)
 
 lib.callback.register('pb-vehiclekeys:AddPlayerKeyServer', function(source, plate, id)

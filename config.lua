@@ -21,4 +21,3 @@ Config.Shared = {
 }
 
 Config.GiveKeysCommand = "darchaves"
-
