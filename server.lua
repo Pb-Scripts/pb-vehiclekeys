@@ -12,6 +12,7 @@ AddEventHandler('entityCreated', function(entity)
     if entityType ~= 2 then return end
 
     SetVehicleDoorsLocked(entity, 2)
+    SetVehicleNeedsToBeHotwired(entity, false)
 end)
 
 lib.callback.register('pb-vehiclekeys:AddPlayerKeyServer', function(source, plate, id)
@@ -26,4 +27,11 @@ lib.callback.register('pb-vehiclekeys:GetCsnKeys', function(source)
     local citizenid = QBCore.Functions.GetPlayer(source).PlayerData.citizenid
 
     if not players_keys[citizenid] then return {} else return players_keys[citizenid] end
+end)
+
+lib.addCommand('getkeys', {
+    help = 'Gets the of vehicle in front',
+    restricted = 'group.admin'
+}, function(source, args, raw)
+    lib.callback.await('pb-vehiclekeys:adminGetKeys', source)
 end)

@@ -1,4 +1,5 @@
 local MyVehicleKeys = {}
+local QBCore = exports['qbx-core']:GetCoreObject()
 
 ------------------
 -- Vehicle Lock --
@@ -25,6 +26,8 @@ AddEventHandler("pb-vehiclekeys:tryingToEnterVehicle", function(targetVehicle, v
     local ped = PlayerPedId()
     local plate = GetVehicleNumberPlateText(targetVehicle)
 
+    isShared(targetVehicle)
+
     while not MyVehicleKeys[plate] and GetPedInVehicleSeat(targetVehicle, -1) == PlayerPedId() do
         SetVehicleEngineOn(targetVehicle, false, false, true)
         Wait(0)
@@ -33,7 +36,7 @@ end)
 
 RegisterCommand("lockveh", function()
     local veh, _ = lib.getClosestVehicle(GetEntityCoords(PlayerPedId()), 5.0, true)
-    if veh ~= 0 and MyVehicleKeys[GetVehicleNumberPlateText(veh)] then
+    if (veh ~= 0 and MyVehicleKeys[GetVehicleNumberPlateText(veh)]) or isShared(veh) then
         playAnim('anim@mp_player_intmenu@key_fob@', 'fob_click', 48)
         if GetVehicleDoorLockStatus(veh) ~= 0 then
             SetVehicleDoorsLocked(veh, 0)
@@ -100,6 +103,11 @@ lib.callback.register('pb-vehiclekeys:adminGetKeys', function()
     return 
 end)
 
+RegisterNetEvent("vehiclekeys:client:SetOwner")
+AddEventHandler("vehiclekeys:client:SetOwner", function(plate)
+    GiveKeys(plate)
+end)
+
 exports("GiveKeys", GiveKeys)
 exports("HaveKeys", HaveKeys)
 
@@ -132,8 +140,9 @@ exports("GetVehicleKeysNearby", GetVehicleKeysNearby)
 
 local function Lockpicking()
     local ped = PlayerPedId()
-    local veh = GetVehicleKeysNearby()
-    if IsPedInAnyVehicle(ped, true) and GetPedInVehicleSeat(GetVehiclePedIsIn(ped), -1) == ped then 
+    local veh = lib.getClosestVehicle(GetEntityCoords(ped), 5.0, true)
+    if IsPedInAnyVehicle(ped, true) and GetPedInVehicleSeat(GetVehiclePedIsIn(ped), -1) == ped then
+        GetVehicleKeysNearby()
         playAnim('veh@std@ds@base', 'hotwire', 1, 5000)
     else
         playAnim('anim@amb@clubhouse@tutorial@bkr_tut_ig3@', 'machinic_loop_mechandplayer', 1, 5000)
@@ -141,3 +150,21 @@ local function Lockpicking()
     end
 end
 exports("Lockpicking", Lockpicking)
+
+-------------
+-- Sharing --
+-------------
+
+function isShared(veh)
+    local jobName = QBCore.Functions.GetPlayerData().job.name
+    if Config.Shared[jobName] and veh ~= 0 and not MyVehicleKeys[GetVehicleNumberPlateText(veh)] then
+        local vehName = GetDisplayNameFromVehicleModel(GetEntityModel(veh))
+        for _, car in pairs(Config.Shared[jobName]) do
+            if string.lower(car) == string.lower(vehName) then
+                GiveKeys(GetVehicleNumberPlateText(veh))
+                return true
+            end
+        end
+    end
+    return false
+end

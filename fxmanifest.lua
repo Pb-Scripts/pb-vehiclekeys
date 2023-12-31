@@ -15,7 +15,7 @@ server_scripts {
 }
 
 shared_scripts {
-    '@pb-utils/init.lua',
+    '@ox_lib/init.lua',
     'config.lua'
 }
 
