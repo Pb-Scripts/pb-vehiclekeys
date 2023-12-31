@@ -24,7 +24,7 @@ end)
 RegisterCommand("lockveh", function()
     local veh, _ = lib.getClosestVehicle(GetEntityCoords(PlayerPedId()), 5.0, true)
     if (veh ~= 0 and MyVehicleKeys[GetVehicleNumberPlateText(veh)]) or isShared(veh) then
-        lib.playAnim('anim@mp_player_intmenu@key_fob@', 'fob_click', 48)
+        lib.playAnim('anim@mp_player_intmenu@key_fob@', 'fob_click', 48, 1000)
         if GetVehicleDoorLockStatus(veh) ~= 0 then
             SetVehicleDoorsLocked(veh, 0)
         else
