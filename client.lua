@@ -77,7 +77,7 @@ RegisterCommand(Config.GiveKeysCommand, function()
     local coords = GetEntityCoords(PlayerPedId())
     local veh, _ = lib.getClosestVehicle(coords, 5.0, true)
     local ped_id, _ = lib.getClosestPlayer(coords, 5.0, false)
-    if veh ~= 0 and ped_id then
+    if HaveKeys[plate] and veh ~= 0 and ped_id then
         GiveKeys(GetVehicleNumberPlateText(veh), GetPlayerServerId(ped_id))
     end
 end)
